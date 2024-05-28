@@ -9,7 +9,12 @@ abstract class Repository
     protected $model;
     protected array $searchable = [];
 
-    public function get(array $attributes = [], array $columns = ['*'])
+    /**
+     * @param array $attributes
+     * @param array $columns
+     * @return mixed
+     */
+    public function get(array $attributes = [], array $columns = ['*']) : mixed
     {
         $defaultData = [
             'order_by' => 'id',
@@ -33,7 +38,13 @@ abstract class Repository
         return $query->get($columns);
     }
 
-    public function paginate(array $attributes = [], array $columns = ['*'])
+    /**
+     * @param array $attributes
+     * @param array $columns
+     * @return mixed
+     */
+
+    public function paginate(array $attributes = [], array $columns = ['*']) : mixed
     {
         $defaultData = [
             'order_by' => 'id',
@@ -59,6 +70,74 @@ abstract class Repository
         return $query->paginate($data['per_page'], ['*'], 'page', $data['page']);
     }
 
+    /**
+     * Store a newly created resource in storage.
+     * @param array $attributes
+     * @param array $relations
+     * @return mixed
+     */
+    public function store(array $attributes, array $relations = []) : mixed
+    {
+        $model = $this->model->create($attributes);
+
+        if (!empty($load)) {
+            $model->load($relations);
+        }
+
+        return $model;
+    }
+
+    /**
+     * Update the specified resource in storage.
+     * @param array $attributes
+     * @param Model $model
+     * @param array $relations
+     * @return Model
+     */
+    public function update(array $attributes, Model $model, array $relations = []) : Model
+    {
+        $model->update($attributes);
+
+        if (!empty($relations)) {
+            $model->load($relations);
+        }
+
+        return $model;
+    }
+
+    public function destroy(int $id) : mixed
+    {
+        $model = $this->getModel($id);
+
+        if (!$model) {
+            return null;
+        }
+
+        $model->delete();
+        return $model;
+    }
+
+    /**
+     * @param $identifier
+     * @param string $id
+     * @return mixed
+     */
+
+    public function getModel($identifier, string $id= 'id') : mixed
+    {
+        if ($identifier instanceof Model) {
+            return $identifier;
+        }
+
+        $model = $this->model->where($id, $identifier)->first();
+        return $model;
+    }
+
+    public function find($id, array $columns = ['*']) : mixed
+    {
+        $model = $this->model->find($id, $columns);
+        return $model;
+    }
 
     private function applyWhere($query, array $conditions)
     {

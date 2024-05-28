@@ -18,25 +18,39 @@ class UserController extends BaseController
         $userQuery = array_merge(
             $request->only(['search', 'filters', 'order_by', 'order', 'per_page']),
             [
-                'with'    => [],
-                'where'   => [
-                    ['name', '!=', 'admin']
+                'with'     => [],
+                'where'    => [
+                    ['name', '=', 'admin']
                 ],
                 'order_by' => 'id',
                 'order'    => 'ASC',
             ]
         );
 
-        $users = $userRepository->paginate($userQuery, ['id', 'name', 'email']);
+        //$userRepository->store(['name' => 'admin', 'email' => 'admin@gmail.com', 'password' => 'password']);
+
+        $users = $userRepository->paginate($userQuery);
         return $this->sendSuccess($users, 'Users retrieved successfully.');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, UserRepository $userRepository) : JsonResponse
     {
-        //
+        try {
+
+            $user = $userRepository->store($request->all());
+
+            return $this->sendSuccess(
+                $user,
+                'User created successfully.',
+                200
+            );
+
+        } catch (\Exception $e) {
+            return $this->sendError('Something Went Wrong', [$e->getMessage()]);
+        }
     }
 
     /**
