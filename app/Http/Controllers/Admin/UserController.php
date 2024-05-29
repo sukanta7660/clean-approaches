@@ -15,7 +15,7 @@ class UserController extends BaseController
     public function index(Request $request, UserRepository $userRepository) : JsonResponse
     {
         $userQuery = array_merge(
-            $request->only(['search', 'filters', 'order_by', 'order', 'per_page']),
+            $request->only(['search', 'filters', 'order_by', 'order', 'per_page', 'page']),
             [
                 'with'     => [],
                 'where'    => [
@@ -37,7 +37,7 @@ class UserController extends BaseController
     {
         try {
 
-            $user = $userRepository->store($request->all());
+            $user = $userRepository->create($request->all());
 
             return $this->sendSuccess(
                 $user,
