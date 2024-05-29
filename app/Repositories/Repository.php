@@ -122,7 +122,7 @@ abstract class Repository
         return $model;
     }
 
-    public function destroy(int $id) : mixed
+    public function delete(int $id) : mixed
     {
         $model = $this->getModel($id);
 
@@ -153,6 +153,12 @@ abstract class Repository
     public function find($id, array $columns = ['*']) : mixed
     {
         $model = $this->model->find($id, $columns);
+        return $model;
+    }
+
+    public function findOrFail($id, array $columns = ['*']) : mixed
+    {
+        $model = $this->model->findOrFail($id, $columns);
         return $model;
     }
 

@@ -29,10 +29,12 @@ class UserController extends BaseController
             ]
         );
 
-        $userRepository->createOrUpdate(
-            ['email' => 'admin1@gmail.com'],
-            ['name' => 'admin', 'email' => 'admin1@gmail.com', 'password' => 'password']
-        );
+//        $userRepository->createOrUpdate(
+//            ['email' => 'admin1@gmail.com'],
+//            ['name' => 'admin', 'email' => 'admin1@gmail.com', 'password' => 'password']
+//        );
+
+        //dd($userRepository->findOrFail(1, ['name', 'email']));
 
         //dd($user->toArray());
 
