@@ -76,11 +76,28 @@ abstract class Repository
      * @param array $relations
      * @return mixed
      */
-    public function store(array $attributes, array $relations = []) : mixed
+    public function create(array $attributes, array $relations = []) : mixed
     {
         $model = $this->model->create($attributes);
 
         if (!empty($load)) {
+            $model->load($relations);
+        }
+
+        return $model;
+    }
+
+    /**
+     * @param array $match
+     * @param array $attributes
+     * @param array $relations
+     * @return mixed
+     */
+    public function createOrUpdate(array $match, array $attributes, array $relations = []) : mixed
+    {
+        $model = $this->model->updateOrCreate($match, $attributes);
+
+        if (!empty($relations)) {
             $model->load($relations);
         }
 

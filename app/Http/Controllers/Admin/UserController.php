@@ -20,14 +20,21 @@ class UserController extends BaseController
             [
                 'with'     => [],
                 'where'    => [
-                    ['name', '=', 'admin']
+                    ['name', '!=', 'admin']
                 ],
                 'order_by' => 'id',
                 'order'    => 'ASC',
+                'per_page' => 10,
+                'page'     => 1
             ]
         );
 
-        //$userRepository->store(['name' => 'admin', 'email' => 'admin@gmail.com', 'password' => 'password']);
+        $userRepository->createOrUpdate(
+            ['email' => 'admin1@gmail.com'],
+            ['name' => 'admin', 'email' => 'admin1@gmail.com', 'password' => 'password']
+        );
+
+        //dd($user->toArray());
 
         $users = $userRepository->paginate($userQuery);
         return $this->sendSuccess($users, 'Users retrieved successfully.');
