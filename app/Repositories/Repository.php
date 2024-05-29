@@ -178,10 +178,12 @@ abstract class Repository
 
     private function applySearch($query, $searchKey)
     {
-        $query->where(function ($query) use ($searchKey) {
-            foreach ($this->searchable as $searchable) {
-                $query->orWhere($searchable, 'LIKE', '%' . $searchKey . '%');
-            }
+        $query->when($searchKey, function ($query, $searchKey) {
+            $query->where(function ($query) use ($searchKey) {
+                foreach ($this->searchable as $field) {
+                    $query->orWhere($field, 'LIKE', "%$searchKey%");
+                }
+            });
         });
 
         return $query;
