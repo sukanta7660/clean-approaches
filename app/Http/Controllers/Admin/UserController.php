@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\BaseController;
-use App\Http\Controllers\Controller;
 use App\Repositories\User\UserRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -23,20 +22,9 @@ class UserController extends BaseController
                     ['name', '!=', 'admin']
                 ],
                 'order_by' => 'id',
-                'order'    => 'ASC',
-                'per_page' => 10,
-                'page'     => 1
+                'order'    => 'ASC'
             ]
         );
-
-//        $userRepository->createOrUpdate(
-//            ['email' => 'admin1@gmail.com'],
-//            ['name' => 'admin', 'email' => 'admin1@gmail.com', 'password' => 'password']
-//        );
-
-        //dd($userRepository->findOrFail(1, ['name', 'email']));
-
-        //dd($user->toArray());
 
         $users = $userRepository->paginate($userQuery);
         return $this->sendSuccess($users, 'Users retrieved successfully.');
