@@ -61,9 +61,21 @@ class UserController extends BaseController
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, UserRepository $userRepository, $user) : JsonResponse
     {
-        //
+        try {
+            $user = $userRepository->find($user);
+
+            $updated = $userRepository->update($request->all(), $user);
+
+            return $this->sendSuccess(
+                $updated,
+                'User updated successfully.',
+                200
+            );
+        } catch (\Exception $e) {
+            return $this->sendError('Something Went Wrong', [$e->getMessage()]);
+        }
     }
 
     /**
